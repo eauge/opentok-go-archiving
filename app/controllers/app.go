@@ -3,11 +3,12 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/eauge/opentok"
-	"github.com/revel/revel"
 	"net/http"
 	"os"
 	"strconv"
+
+	opentok "github.com/eauge/opentok-go-sdk"
+	"github.com/revel/revel"
 )
 
 var (
@@ -50,7 +51,7 @@ func (c App) Index() revel.Result {
 func (c App) HostView() revel.Result {
 	session = getSession()
 
-	token, err := session.GenerateToken(properties)
+	token, err := session.Token(properties)
 	if err != nil {
 		panic("Token could not be created")
 	}
@@ -58,7 +59,7 @@ func (c App) HostView() revel.Result {
 	m := Message{
 		ApiKey:    session.ApiKey,
 		SessionId: session.Id,
-		Token:     string(token),
+		Token:     token.String(),
 	}
 	return c.Render(m)
 }
@@ -66,7 +67,7 @@ func (c App) HostView() revel.Result {
 func (c App) ParticipantView() revel.Result {
 	session = getSession()
 
-	token, err := session.GenerateToken(properties)
+	token, err := session.Token(properties)
 	if err != nil {
 		panic("Token could not be created")
 	}
@@ -74,7 +75,7 @@ func (c App) ParticipantView() revel.Result {
 	m := Message{
 		ApiKey:    session.ApiKey,
 		SessionId: session.Id,
-		Token:     string(token),
+		Token:     token.String(),
 	}
 	return c.Render(m)
 }
